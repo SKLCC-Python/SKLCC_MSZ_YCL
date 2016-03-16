@@ -15,7 +15,7 @@ DATABASES = {
         'ENGINE': 'django_pyodbc', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.'django_pyodbc','sqlserver_ado'
         'NAME': 'RMI',                      # Or path to database file if using sqlite3.
         'USER': 'sa',                      # Not used with sqlite3.
-        'PASSWORD': 'sklcc',                  # Not used with sqlite3.
+        'PASSWORD': '1qaz1qaz',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'OPTIONS':{
             'host_is_server':True
