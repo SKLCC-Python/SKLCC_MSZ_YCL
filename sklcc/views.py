@@ -10,6 +10,7 @@ import urllib
 import sys
 from administration import *
 from inspectFunction import *
+
 import CommonUtilities
 
 reload(sys)
@@ -179,6 +180,7 @@ def login(request, Id):
 				user_data = cursor.fetchone()
 				col_names = [desc[0] for desc in cursor.description]
 				user = dict(zip(col_names, user_data))
+				print user
 				request.session['UserId'] = Id
 				request.session['Name'] = user['Name']
 				response = HttpResponse(json.dumps(user, encoding='GB2312'), content_type="application/json")
@@ -1301,22 +1303,47 @@ def process_iscomplete(request, ASN):
 #==============================================================
 
 def getTasks(request, UserID):
+	if request.method == 'GET':
+		raw_sql = Raw_sql()
+		if UserID == 'ALL':
+			raw_sql.sql = "select RMI_TASK.ArriveTime, RMI_TASK.ColorNo, RMI_TASK.CreateTime, RMI_TASK.LastModifiedTime, RMI_TASK.ProductNo, RMI_TASK.SerialNo, RMI_ACCOUNT_USER.Name from RMI_TASK,RMI_ACCOUNT_USER where RMI_TASK.UserID = RMI_ACCOUNT_USER.ID"
+		else:
+			raw_sql.sql = "select RMI_TASK.ArriveTime, RMI_TASK.ColorNo, RMI_TASK.CreateTime, RMI_TASK.LastModifiedTime, RMI_TASK.ProductNo, RMI_TASK.SerialNo, RMI_ACCOUNT_USER.Name from RMI_TASK,RMI_ACCOUNT_USER where RMI_TASK.UserID = RMI_ACCOUNT_USER.ID and RMI_TASK.UserID = '%s'" % UserID
+		data_list,col_names = raw_sql.query_all(needColumnName=True)
+		res = [dict(zip(col_names, ele)) for ele in data_list]
+		for item in res:
+			item['ArriveTime'] = item['ArriveTime'].strftime('%Y-%m-%d')
+			item['LastModifiedTime'] = item['LastModifiedTime'].strftime('%Y-%m-%d %H:%M')
+			item['CreateTime'] = item['CreateTime'].strftime('%Y-%m-%d %H:%M')
+		return HttpResponse(json.dumps(res, encoding='GB2312'), content_type='application/json')
+	else:
+		return HttpResponseBadRequest()
 
 def editTask(request):
+	if request.method == 'POST':
+		editTaskInfo(json.loads(request.POST['JSON']), request.session['UserId'])
+		return HttpResponse()
+	else:
+		return HttpResponseBadRequest()
 
 def getFlow(request):
+	if request.method == 'GET':
+		return HttpResponse(json.dumps(getFlowList(),encoding='GB2312'),content_type='application/json')
+	else:
+		return HttpResponseBadRequest()
 
-def getFormData(request, serialNo, processID, getMethod):
-
-def insertFormData(request, processID, serialNo):
-
-
-def getTaskProcess(request, serialNo):
-
-def deleteTask(request, serialNo):
-
-def passProcess(requests, serialNo, processID):
-
-def test(request):
+#
+# def getFormData(request, serialNo, processID, getMethod):
+#
+# def insertFormData(request, processID, serialNo):
+#
+#
+# def getTaskProcess(request, serialNo):
+#
+# def deleteTask(request, serialNo):
+#
+# def passProcess(requests, serialNo, processID):
+#
+# def test(request):
 
 
