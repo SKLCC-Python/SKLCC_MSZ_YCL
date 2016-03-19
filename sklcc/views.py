@@ -1340,8 +1340,15 @@ def getFlow(request):
 #
 # def getTaskProcess(request, serialNo):
 #
-# def deleteTask(request, serialNo):
-#
+def deleteTask(request, serialNo):
+	if request.method == 'GET':
+		cursor = connection.cursor()
+		cursor.execute("delete from RMI_TASK where serialNo = '%s'" % serialNo)
+		transaction.commit_unless_managed()
+		return HttpResponse()
+	else:
+		return HttpResponseBadRequest()
+
 # def passProcess(requests, serialNo, processID):
 #
 # def test(request):
