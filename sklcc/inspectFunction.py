@@ -40,13 +40,18 @@ def getFlowList():
 
 def getTaskProcessList(serialNo):
     raw = Raw_sql()
-    raw.sql = "select C.ProcessID, C.modifyPeople, C.modifyTime, C.name, C.currentState, convert(float,P.states)states from(" \
-              "select RMI_TASK_PROCESS.ProcessID, min(RMI_PROCESS_STEP.StepSeq)curstates,(1-min(RMI_PROCESS_STEP.StepSeq))/max(RMI_PROCESS_STEP.StepSeq)*100.0states " \
-              "from RMI_TASK_PROCESS join RMI_PROCESS_STEP on RMI_TASK_PROCESS.ProcessID = RMI_PROCESS_STEP.ProcessID where RMI_TASK_PROCESS.Serialno = '%s' group by RMI_TASK_PROCESS.ProcessID)P join(" \
+    raw.sql = "select C.ProcessID, C.modifyTime, C.modifyPeople, C.name, C.currentState, convert(float,P.states)states from(" \
+              "select M.ProcessID, N.states, (M.max1+1-N.num) curstate from(" \
+              "select ProcessID, max(StepSeq) AS max1 from RMI_PROCESS_STEP group by ProcessID" \
+              ")M join(" \
+              "select ProcessID,count(Finished) AS num, sum(Finished)/count(Finished)*100.0 states from RMI_TASK_PROCESS_STEP where Serialno = '%s' group by ProcessID" \
+              ")N on M.ProcessID = N.ProcessID" \
+              ")P join(" \
               "select B.*, RMI_STEP.StepName AS currentState from(" \
-              "select RMI_TASK_PROCESS.ProcessID, convert(varchar(16),RMI_TASK_PROCESS.LastModifiedTime,20)modifyTime, convert(varchar(16),RMI_TASK_PROCESS.LastModifiedUser)modifyPeople, RMI_PROCESS_TYPE.Name AS name, RMI_PROCESS_STEP.StepID, RMI_PROCESS_STEP.StepSeq " \
-              "from RMI_TASK_PROCESS join RMI_PROCESS_TYPE on RMI_TASK_PROCESS.ProcessID = RMI_PROCESS_TYPE.Id join RMI_PROCESS_STEP on RMI_TASK_PROCESS.ProcessID = RMI_PROCESS_STEP.ProcessID " \
-              "where RMI_TASK_PROCESS.Serialno = '%s')B join RMI_STEP on B.StepID = RMI_STEP.StepID)C on P.ProcessID = C.ProcessID and P.curstates = C.StepSeq" % (serialNo, serialNo)
+              "select T.Serialno, T.ProcessID, convert(varchar(16),T.LastModifiedTime,20)modifyTime, convert(varchar(16),T.LastModifiedUser)modifyPeople, RMI_PROCESS_TYPE.Name AS name, RMI_PROCESS_STEP.StepID, RMI_PROCESS_STEP.StepSeq " \
+              "from RMI_TASK_PROCESS AS T join RMI_PROCESS_TYPE on T.ProcessID = RMI_PROCESS_TYPE.Id join RMI_PROCESS_STEP on T.ProcessID = RMI_PROCESS_STEP.ProcessID where T.Serialno = '%s'" \
+              ")B join RMI_STEP on B.StepID = RMI_STEP.StepID" \
+              ")C on P.ProcessID = C.ProcessID and P.curstate = C.StepSeq" % (serialNo, serialNo)
     data_list,col_names = raw.query_all(needColumnName=True)
     return translateQueryResIntoDict(col_names, data_list)
 
