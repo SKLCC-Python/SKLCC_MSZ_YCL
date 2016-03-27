@@ -7,6 +7,11 @@ from rawSql import *
 from CommonUtilities import *
 
 def getTasksList(UserID):
+    """
+    获取某用户创建的任务列表
+    :param UserID:
+    :return: {key:value}
+    """
     raw = Raw_sql()
     raw.sql = "select convert(varchar(16),RMI_TASK.ArriveTime,20)ArriveTime, RMI_TASK.ColorNo, convert(varchar(16),RMI_TASK.CreateTime,20)CreateTime, convert(varchar(16),RMI_TASK.LastModifiedTime,20)LastModifiedTime, RMI_TASK.ProductNo, RMI_TASK.SerialNo, RMI_ACCOUNT_USER.Name " \
               "from RMI_TASK,RMI_ACCOUNT_USER where RMI_TASK.UserID = RMI_ACCOUNT_USER.ID"
@@ -17,6 +22,12 @@ def getTasksList(UserID):
 
 
 def editTaskInfo(taskInfo, userID):
+    """
+    插入或更新任务的相关信息
+    :param taskInfo:
+    :param userID:
+    :return:
+    """
     raw = Raw_sql()
     if taskInfo['isNew']:
         raw.sql = "insert into RMI_TASK(CreateTime,LastModifiedTime,ProductNo,ColorNo,ArriveTime,UserID,FlowID) values(GETDATE(),GETDATE(),'%s','%s','%s','%s','%s')" \
@@ -56,6 +67,76 @@ def getTaskProcessList(serialNo):
     return translateQueryResIntoDict(col_names, data_list)
 
 
-#
+def getFormDataList(serialNo, processID, getMethod):
+    """
+    获取点开某个表单页面所需数据
+    :param serialNo:
+    :param processID:
+    :param getMethod:
+    :return: formData
+    """
+    formData = {}
+    raw = Raw_sql()
+    # 构造formData['info']
+    raw.sql = "select ProductNo,convert(varchar(16),ArriveTime,20)ArriveTime,convert(varchar(16),AssessTime,20)AssessTime,Assessor,UserID,convert(varchar(16),CreateTime,20)CreateTime,Assessor from RMI_TASK inner join RMI_TASK_PROCESS " \
+              "on  RMI_TASK.SerialNo = RMI_TASK_PROCESS.Serialno where RMI_TASK.SerialNo = '%s' and RMI_TASK_PROCESS.ProcessID = '%s'" % (serialNo,processID)
+    res, columns = raw.query_one(needColumnName=True)
+    formData['info'] = dict(zip(columns, res))
+    formData['info']['check'] = True
+    if getMethod == 'dataEntry':
+        formData['info']['check'] = False
+
+    # 构造formData['data']
+    listData = {}
+    if processID == 'F01':
+        raw.sql = "select DingDanHao,HeGeShu,DaoLiaoZongShu,QiTa,GongYingShang,ShiCeShu,GuiGe,TouChanShu,DingDanHao,BiaoZhiShu,WaiGuan,JianYanHao,MaterialType as SelectedType from RMI_F01_DATA where SerialNo = '%s'" %serialNo
+        res,columns = raw.query_one(needColumnName=True)
+        listData = dict(zip(columns,res))
+    # else:
+    #     raw.sql = "select DingDanHao,HeGeShu,DaoLiaoZongShu,QiTa,GongYingShang,ShiCeShu,GuiGe,TouChanShu,DingDanHao,BiaoZhiShu,WaiGuan,JianYanHao,MaterialType as SelectedType from RMI_F01_DATA where SerialNo = '%s'" %serialNo
+    #     res,columns = raw.query_one(needColumnName=True)
+    #     listData = dict(zip(columns,res))
+    formData['data'] = listData.copy()
+    # 构造formData['data']['listData']
+    formData['data']['listData'] = []
+    formData['data']['listData'].append(listData.copy())
+    # 构造formData['data']['step']
+    formData['data']['step'] = []
+    raw.sql = "select Finished,StepName,RMI_TASK_PROCESS_STEP.StepID from RMI_TASK_PROCESS_STEP inner join RMI_STEP on RMI_TASK_PROCESS_STEP.StepID = RMI_STEP.StepID where SerialNo = '%s' and ProcessID = '%s'" %(serialNo,processID)
+    res = raw.query_all()
+    for item in res:
+        step = {}
+        step['state'] = item[0]
+        step['name'] = item[1]
+        step['value'] = item[2]
+        formData['data']['step'].append(step)
+    return formData
+
+def insertFormDataList(formData, userID, processID, serialNo):
+    """
+    在相应的表单（F01、F02）中插入数据
+    :param formData:
+    :param userID:
+    :param processID:
+    :param serialNo:
+    :return:
+    """
+    raw = Raw_sql()
+    raw.sql = ''
+    if processID == 'F01':
+        for dic in formData['listData']:
+            # dic.pop('hasTouChanShu')
+            # dic.pop('timer')
+            # dic.pop('hasDingDanShu')
+            # columns = ','.join(['[' + unicode(key) + ']' for key in dic.keys()])
+            # columns = columns.replace('SelectedType','MaterialType')
+            # values = ','.join(["'" + unicode(value) + "'" for value in dic.values()])
+            # values = values.replace('None','Null')
+            raw.sql += "insert into RMI_F01_DATA(SerialNo,GuiGe,BiaoZhiShu,ShiCeShu,HeGeShu,WaiGuan,JianYanHao,QiTa,InspectorNo,GongYingShang,DaoLiaoZongShu,DingDanHao,MaterialType) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " \
+                       % (serialNo,dic['GuiGe'],dic['BiaoZhiShu'],dic['ShiCeShu'],dic['HeGeShu'],dic['WaiGuan'],dic['JianYanHao'],dic['QiTa'],userID,formData['GongYingShang'],formData['DaoLiaoZongShu'],formData['DingDanHao'],formData['SelectedType'])
+    raw.update()
+
+
+
 # def deleteTaskBySerialNo(SerialNo):
 

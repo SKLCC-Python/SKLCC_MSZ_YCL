@@ -1321,18 +1321,25 @@ def getFlow(request):
 	else:
 		return HttpResponseBadRequest()
 
-#
-# def getFormData(request, serialNo, processID, getMethod):
-#
-# def insertFormData(request, processID, serialNo):
-#
-#
+
+def getFormData(request, serialNo, processID, getMethod):
+	if request.method == 'GET':
+		return HttpResponse(json.dumps(getFormDataList(serialNo, processID, getMethod), encoding='GB2312'), content_type='application/json')
+	else:
+		return HttpResponseBadRequest()
+
+def insertFormData(request, serialNo, processID):
+	if request.method == 'POST':
+		insertFormDataList(json.loads(request.POST['JSON']), request.session['UserId'], processID, serialNo)
+		return HttpResponse()
+	else:
+		return HttpResponseBadRequest()
+
 def getTaskProcess(request, serialNo):
 	if request.method == 'GET':
 		return HttpResponse(json.dumps(getTaskProcessList(serialNo), encoding='GB2312'), content_type='application/json')
 	else:
 		return HttpResponseBadRequest()
-
 
 def deleteTask(request, serialNo):
 	if request.method == 'GET':
