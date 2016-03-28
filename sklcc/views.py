@@ -1309,6 +1309,11 @@ def getTasks(request, UserID):
 		return HttpResponseBadRequest()
 
 def editTask(request):
+	"""
+	插入或更新任务的相关信息
+	:param request:
+	:return:
+	"""
 	if request.method == 'POST':
 		editTaskInfo(json.loads(request.POST['JSON']), request.session['UserId'])
 		return HttpResponse()
@@ -1316,6 +1321,11 @@ def editTask(request):
 		return HttpResponseBadRequest()
 
 def getFlow(request):
+	"""
+	获取所有工作流列表
+	:param request:
+	:return: json
+	"""
 	if request.method == 'GET':
 		return HttpResponse(json.dumps(getFlowList(),encoding='GB2312'),content_type='application/json')
 	else:
@@ -1323,14 +1333,31 @@ def getFlow(request):
 
 
 def getFormData(request, serialNo, processID, getMethod):
+	"""
+	获取点开F01表格所需数据
+	:param request:
+	:param serialNo: 流水号
+	:param processID: 表格ID
+	:param getMethod: 获取方式,两种：check和dataEntry
+	:return:
+	"""
 	if request.method == 'GET':
-		return HttpResponse(json.dumps(getFormDataList(serialNo, processID, getMethod), encoding='GB2312'), content_type='application/json')
+		if processID == 'F01':
+			return HttpResponse(json.dumps(getF01DataBySerialNo(serialNo, getMethod,request.session['UserId']), encoding='GB2312'), content_type='application/json')
 	else:
 		return HttpResponseBadRequest()
 
 def insertFormData(request, serialNo, processID):
+	"""
+	根据任务流水号在相应的表单（F01、F02）中插入数据
+	:param request:
+	:param serialNo: 流水号
+	:param processID: 表格ID
+	:return:
+	"""
 	if request.method == 'POST':
-		insertFormDataList(json.loads(request.POST['JSON']), request.session['UserId'], processID, serialNo)
+		if processID == 'F01':
+			insertF01DataBySerialNo(json.loads(request.POST['JSON']), request.session['UserId'],  serialNo)
 		return HttpResponse()
 	else:
 		return HttpResponseBadRequest()
