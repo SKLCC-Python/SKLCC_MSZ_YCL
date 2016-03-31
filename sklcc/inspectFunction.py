@@ -119,6 +119,22 @@ def getF01DataBySerialNo(serialNo, getMethod, userID):
     formData['data']['step'] = getStepDataList(serialNo,'F01')
     return formData
 
+def updateStepAndModified(isFinsined, SerialNo, ProcessID, selectedStep, userID):
+    """
+    更新表单step（填写、审核）的状态（1-完成，0-未完）,更新表格的最新修改人和修改时间
+    :param isFinsined:step是否完成
+    :param SerialNo:流水号
+    :param selectedStep:选中的stepID
+    :param userID:工号
+    :return:sql语句
+    """
+    sql = "update RMI_TASK_PROCESS set LastModifiedTime = GETDATE(), LastModifiedUser = '%s' where Serialno = '%s' and ProcessID = '%s' " %(userID,SerialNo,ProcessID)
+    if isFinsined:
+        sql += "update RMI_TASK_PROCESS_STEP set Finished = 1, FinishTime = GETDATE() ,LastModifiedTime = GETDATE() where SerialNo = '%s' and ProcessID = '%s' and StepID = '%s'" %(SerialNo,ProcessID,selectedStep)
+    return sql
+
+
+
 def insertF01DataBySerialNo(formData, userID, serialNo):
     """
     根据任务流水号在F01表格中插入数据
@@ -132,6 +148,7 @@ def insertF01DataBySerialNo(formData, userID, serialNo):
     for dic in formData['listData']:
         raw.sql += "insert into RMI_F01_DATA(SerialNo,GuiGe,BiaoZhiShu,ShiCeShu,HeGeShu,WaiGuan,JianYanHao,QiTa,InspectorNo,GongYingShang,DaoLiaoZongShu,DingDanHao,MaterialType) values('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s') " \
                    % (serialNo,dic['GuiGe'],dic['BiaoZhiShu'],dic['ShiCeShu'],dic['HeGeShu'],dic['WaiGuan'],dic['JianYanHao'],dic['QiTa'],userID,formData['GongYingShang'],formData['DaoLiaoZongShu'],formData['DingDanHao'],formData['SelectedType'])
+    raw.sql += updateStepAndModified(formData['isSubmit'],serialNo,'F01',formData['selectedStep'],userID)
     raw.update()
     return
 

@@ -164,9 +164,9 @@
     "Assessor": null
   },
   "data": {
-    "DingDanShu": null,
-    "HeGeShu": null,
-    "DaoLiaoZongShu": null,
+    //"DingDanShu": null,
+    //"HeGeShu": null,
+    //"DaoLiaoZongShu": null,
     "listData": [
       {
         "QiTa": null,
@@ -184,28 +184,16 @@
         "JianYanHao": null
       }
     ],
-    "QiTa": null,
-    "GongYingShang": null,
-    "ShiCeShu": null,
-    "step": [
-      {
-        "state": 0,
-        "name": "\u68c0\u9a8c\u5458\u586b\u5199",
-        "value": "4B652F7E-846E-419C-818E-544E1D00E6A5"
-      },
-      {
-        "state": 0,
-        "name": "\u5ba1\u6838",
-        "value": "36929B8A-8C15-4068-8C0A-6DA2060AA172"
-      }
-    ],
-    "GuiGe": null,
-    "SelectedType": null,
-    "TouChanShu": null,
-    "DingDanHao": null,
-    "BiaoZhiShu": null,
-    "WaiGuan": null,
-    "JianYanHao": null
+    //"QiTa": null,
+    //"GongYingShang": null,
+    //"ShiCeShu": null,
+    //"GuiGe": null,
+    //"SelectedType": null,
+    //"TouChanShu": null,
+    //"DingDanHao": null,
+    //"BiaoZhiShu": null,
+    //"WaiGuan": null,
+    //"JianYanHao": null
   }
 }
 
