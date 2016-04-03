@@ -151,79 +151,51 @@
   "BuHeGeChuLi": "1"
 }
 
-
 {
-  "info": {
-    "check": false,
-    "ProductNo": "12",
-    "ArriveTime": "2016-03-16",
-    "AssessTime": null,
-    "UserID": "test",
-    "CreateTime": "2016-03-24",
-    "ColorNo": "12",
-    "Assessor": null
-  },
-  "data": {
-    //"DingDanShu": null,
-    //"HeGeShu": null,
-    //"DaoLiaoZongShu": null,
-    "listData": [
-      {
-        "QiTa": null,
-        "DaoLiaoZongShu": null,
-        "SelectedType": null,
-        "DingDanShu": null,
-        "GongYingShang": null,
-        "TouChanShu": null,
-        "GuiGe": null,
-        "HeGeShu": null,
-        "ShiCeShu": null,
-        "DingDanHao": null,
-        "BiaoZhiShu": null,
-        "WaiGuan": null,
-        "JianYanHao": null
-      }
-    ],
-    //"QiTa": null,
-    //"GongYingShang": null,
-    //"ShiCeShu": null,
-    //"GuiGe": null,
-    //"SelectedType": null,
-    //"TouChanShu": null,
-    //"DingDanHao": null,
-    //"BiaoZhiShu": null,
-    //"WaiGuan": null,
-    //"JianYanHao": null
-  }
-}
-
-
-{
-  "HeGeShu": null,
-  "DaoLiaoZongShu": 1,
+  "QiTa": "nars",
+  "HeGeShu": 2,
+  "DaoLiaoZongShu": 3,
   "listData": [
     {
+      "DingDanShu": 2,
+      "DaoLiaoZongShu": 3,
+      "QiTa": "nars",
+      "GongYingShang": "dv",
+      "TouChanShu": 2,
+      "SelectedType": "纸卡",
+      "GuiGe": "nars",
+      "HeGeShu": 2,
+      "ShiCeShu": 2,
+      "DingDanHao": "1",
+      "BiaoZhiShu": 2,
+      "WaiGuan": 1,
+      "JianYanHao": "nars",
+      "hasDingDanShu": true,
+      "hasTouChanShu": true,
+      "timer": null
+    },
+    {
+      "DingDanShu": 1,
+      "DaoLiaoZongShu": 3,
+      "QiTa": "dv",
+      "GongYingShang": "dv",
+      "TouChanShu": 1,
+      "SelectedType": "纸卡",
+      "GuiGe": "dv",
       "HeGeShu": 1,
-      "DaoLiaoZongShu": null,
-      "QiTa": "1",
-      "GongYingShang": null,
       "ShiCeShu": 1,
-      "GuiGe": "1",
-      "SelectedType": null,
-      "TouChanShu": null,
-      "DingDanHao": null,
+      "DingDanHao": "1",
       "BiaoZhiShu": 1,
       "WaiGuan": 1,
-      "JianYanHao": "1",
+      "JianYanHao": "dv",
       "hasDingDanShu": true,
-      "hasTouChanShu": false,
-      "DingDanShu": 1,
+      "hasTouChanShu": true,
       "timer": null
     }
   ],
-  "QiTa": null,
-  "GongYingShang": "1",
-  "ShiCeShu": null,
+  "DingDanShu": 2,
+  "GongYingShang": "dv",
+  "ShiCeShu": 2,
   "step": [
     {
       "state": 0,
@@ -236,157 +208,13 @@
       "value": "36929B8A-8C15-4068-8C0A-6DA2060AA172"
     }
   ],
-  "GuiGe": null,
-  "SelectedType": "商标",
-  "TouChanShu": null,
+  "GuiGe": "nars",
+  "SelectedType": "纸卡",
+  "TouChanShu": 2,
   "DingDanHao": "1",
-  "BiaoZhiShu": null,
-  "WaiGuan": null,
-  "JianYanHao": null,
-  "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
-  "default_jianyanhao": "1",
-  "isSubmit": false
-}
-
-
-{
-  "listData": [
-    {
-      "JuanHao": 1,
-      "GangHao": 1,
-      "ShuLiangPiBiao1": 1,
-      "ShuLiangShiCe1": 1,
-      "ShuLiangPiBiao2": "1",
-      "ShuLiangShiCe2": "1",
-      "JianYanShu": 1,
-      "KuanDuOrGuiGeBiaoZhunZhi": "1",
-      "KuanDuOrGuiGeBiaoZhunPianCha": "1",
-      "KuanDuOrGuiGeShiCe1": "1",
-      "KuanDuOrGuiGeShiCe2": "1",
-      "KuanDuOrGuiGeShiCe3": "1",
-      "DengJiPanDing": "A",
-      "BeiZhu": "1",
-      "ShouRouHuiSuoLv": "1",
-      "ZiRanHuiSuoLv": "1"
-    }
-  ],
-  "LeiBie": "A",
-  "GongYingShang": "1",
-  "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
-  "ChanPinZhongLei": "肩带",
-  "DaoLiaoZongShu": 1,
-  "CaiLiaoMingCheng": "1",
-  "XiangMuFlag": {
-    "hasKuanDuOrGuiGe": true
-  },
-  "hasBiaoZhunSeKa": true,
-  "QiWei": "ZhengChang",
-  "AnLunShiYan": "HeGe",
-  "YanZhenJieGuo": "1",
-  "ZhengFanMian": "ZhengQue",
-  "ShouGan": "1",
-  "ShaXiang": "ZhengQue",
-  "CaiLiaoCiDianZhuYaoWenTi": "1",
-  "YinBiaoWeiZhi": "ZhengQue",
-  "JieLun": "HeGe",
-  "GuiGeOrKuanDu": "KuanDu",
-  "GuiGeOrKuanDuDanWei": "1",
-  "ShuLiang": {
-    "MiIsChecked": true
-  },
-  "isSubmit": false
-}
-
-
-{
-  "listData": [
-    {
-      "hasDingDanShu": true,
-      "hasTouChanShu": false,
-      "GuiGe": "1",
-      "DingDanShu": 1,
-      "BiaoZhiShu": 11,
-      "ShiCeShu": 1,
-      "HeGeShu": 1,
-      "WaiGuan": 1,
-      "JianYanHao": "1",
-      "QiTa": "1",
-      "timer": null
-    }
-  ],
-  "DaoLiaoZongShu": 1,
-  "DingDanHao": "1",
-  "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
-  "GongYingShang": "1",
-  "SelectedType": "商标",
-  "default_jianyanhao": "1",
-  "isSubmit": false
-}
-
-
-{
-  "HeGeShu": 1,
-  "DaoLiaoZongShu": 9,
-  "listData": [
-    {
-      "HeGeShu": 2,
-      "DaoLiaoZongShu": null,
-      "QiTa": "2",
-      "GongYingShang": null,
-      "ShiCeShu": 2,
-      "GuiGe": "2",
-      "SelectedType": null,
-      "TouChanShu": null,
-      "DingDanHao": null,
-      "BiaoZhiShu": 2,
-      "WaiGuan": 1,
-      "JianYanHao": "4",
-      "hasDingDanShu": true,
-      "hasTouChanShu": false,
-      "DingDanShu": 2,
-      "timer": null
-    },
-    {
-      "GuiGe": "3",
-      "BiaoZhiShu": 3,
-      "ShiCeShu": 3,
-      "HeGeShu": 3,
-      "WaiGuan": 1,
-      "JianYanHao": "4",
-      "QiTa": "3",
-      "TouChanShu": null,
-      "DingDanShu": 3,
-      "hasDingDanShu": true,
-      "hasTouChanShu": false,
-      "timer": null
-    },
-    {
-      "GuiGe": "4",
-      "BiaoZhiShu": 4,
-      "ShiCeShu": 4,
-      "HeGeShu": 4,
-      "WaiGuan": 1,
-      "JianYanHao": "4",
-      "QiTa": "4",
-      "TouChanShu": null,
-      "DingDanShu": 4,
-      "hasDingDanShu": true,
-      "hasTouChanShu": false,
-      "timer": null
-    }
-  ],
-  "QiTa": "1",
-  "GongYingShang": "2",
-  "ShiCeShu": 1,
-
-  "GuiGe": "1",
-  "SelectedType": "不干贴",
-  "TouChanShu": null,
-  "DingDanHao": "2",
-  "BiaoZhiShu": 11,
+  "BiaoZhiShu": 2,
   "WaiGuan": true,
-  "JianYanHao": "1",
+  "JianYanHao": "nars",
   "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
-  "default_jianyanhao": "4",
-  "isSubmit": false
+  "isSubmit": true
 }
