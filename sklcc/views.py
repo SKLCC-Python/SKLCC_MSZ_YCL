@@ -1303,6 +1303,12 @@ def process_iscomplete(request, ASN):
 #==============================================================
 
 def getTasks(request, UserID):
+	"""
+	获取任务列表
+	:param request:
+	:param UserID: 工号
+	:return:
+	"""
 	if request.method == 'GET':
 		return HttpResponse(json.dumps(getTasksList(UserID), encoding='GB2312'), content_type='application/json')
 	else:
@@ -1363,21 +1369,38 @@ def insertFormData(request, serialNo, processID):
 		return HttpResponseBadRequest()
 
 def getTaskProcess(request, serialNo):
+	"""
+	获取任务需要填的表单
+	:param request:
+	:param serialNo: 流水号
+	:return:
+	"""
 	if request.method == 'GET':
 		return HttpResponse(json.dumps(getTaskProcessList(serialNo), encoding='GB2312'), content_type='application/json')
 	else:
 		return HttpResponseBadRequest()
 
 def deleteTask(request, serialNo):
+	"""
+	根据流水号删除任务
+	:param request:
+	:param serialNo: 流水号
+	:return:
+	"""
 	if request.method == 'GET':
-		cursor = connection.cursor()
-		cursor.execute("delete from RMI_TASK where serialNo = '%s'" % serialNo)
-		transaction.commit_unless_managed()
+		deleteTaskBySerialNo(serialNo)
 		return HttpResponse()
 	else:
 		return HttpResponseBadRequest()
 
 def passProcess(request, serialNo, processID):
+	"""
+	表单审核通过
+	:param request:
+	:param serialNo: 流水号
+	:param processID: 表单ID
+	:return:
+	"""
 	if request.method == 'GET':
 		passProcessData(serialNo, processID, request.session['UserId'])
 		return HttpResponse()

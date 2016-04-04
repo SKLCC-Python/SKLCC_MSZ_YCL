@@ -51,6 +51,11 @@ def getFlowList():
 
 
 def getTaskProcessList(serialNo):
+    """
+    获取任务所需填的表单
+    :param serialNo: 流水号
+    :return: {}
+    """
     raw = Raw_sql()
     raw.sql = "select C.ProcessID, C.modifyTime, C.modifyPeople, C.name, C.currentState, convert(float,P.states)states from(" \
               "select M.ProcessID, N.states, (M.max1+1-N.num) curstate from(" \
@@ -175,5 +180,14 @@ def passProcessData(serialNo, processID ,userID):
     raw.update()
     return
 
-# def deleteTaskBySerialNo(SerialNo):
+def deleteTaskBySerialNo(SerialNo):
+    """
+    根据流水号删除任务
+    :param SerialNo: 流水号
+    :return:
+    """
+    raw = Raw_sql()
+    raw.sql = "delete from RMI_TASK where SerialNo = '%s'" % SerialNo
+    raw.update()
+    return
 
