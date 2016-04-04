@@ -27,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^api/inspect/(.+)/insert(\w+)Data/$', views.insertFormData),
     url(r'^api/inspect/(.+)/getTaskProcess/$', views.getTaskProcess),
     # url(r'^api/inspect/(.+)/deleteTask/$', views.deleteTask),
-    # url(r'^api/inspect/(.+)/passProcess/(.+)/$', views.passProcess),
+    url(r'^api/inspect/(.+)/passProcess/(.+)/$', views.passProcess),
 
 
 

@@ -1377,7 +1377,13 @@ def deleteTask(request, serialNo):
 	else:
 		return HttpResponseBadRequest()
 
-# def passProcess(requests, serialNo, processID):
+def passProcess(request, serialNo, processID):
+	if request.method == 'GET':
+		passProcessData(serialNo, processID, request.session['UserId'])
+		return HttpResponse()
+	else:
+		return HttpResponseBadRequest()
+
 #
 # def test(request):
 

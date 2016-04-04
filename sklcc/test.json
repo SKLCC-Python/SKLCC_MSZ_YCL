@@ -218,3 +218,53 @@
   "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
   "isSubmit": true
 }
+
+{
+  "QiTa": "9",
+  "HeGeShu": 9,
+  "DaoLiaoZongShu": 9,
+  "listData": [
+    {
+      "DingDanShu": 9,
+      "DaoLiaoZongShu": 9,
+      "QiTa": "9",
+      "GongYingShang": "9",
+      "TouChanShu": null,
+      "SelectedType": "纸卡",
+      "GuiGe": "9",
+      "HeGeShu": 9,
+      "ShiCeShu": 9,
+      "DingDanHao": "9",
+      "BiaoZhiShu": 9,
+      "WaiGuan": 1,
+      "JianYanHao": "9",
+      "hasDingDanShu": true,
+      "hasTouChanShu": false,
+      "timer": null
+    }
+  ],
+  "DingDanShu": 9,
+  "GongYingShang": "9",
+  "ShiCeShu": 9,
+  "step": [
+    {
+      "state": 0,
+      "name": "检验员填写",
+      "value": "4B652F7E-846E-419C-818E-544E1D00E6A5"
+    },
+    {
+      "state": 0,
+      "name": "审核",
+      "value": "36929B8A-8C15-4068-8C0A-6DA2060AA172"
+    }
+  ],
+  "GuiGe": "9",
+  "SelectedType": "纸卡",
+  "TouChanShu": null,
+  "DingDanHao": "9",
+  "BiaoZhiShu": 9,
+  "WaiGuan": true,
+  "JianYanHao": "9",
+  "selectedStep": "4B652F7E-846E-419C-818E-544E1D00E6A5",
+  "isSubmit": true
+}

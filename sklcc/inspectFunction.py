@@ -35,7 +35,6 @@ def editTaskInfo(taskInfo, userID):
     else:
         raw.sql = "update RMI_TASK set ProductNo = '%s',ArriveTime = '%s',ColorNo = '%s',LastModifiedTime = GETDATE() where SerialNo = '%s'" \
                   % (taskInfo['ProductNo'], taskInfo['ArriveTime'], taskInfo['ColorNo'], taskInfo['SerialNo'])
-    print raw.sql
     raw.update()
     return
 
@@ -92,13 +91,17 @@ def getF01DataBySerialNo(serialNo, getMethod, userID):
     formData = {}
     raw = Raw_sql()
     # 构造formData['info']
-    raw.sql = "select ProductNo,convert(varchar(16),ArriveTime,20)ArriveTime,convert(varchar(16),AssessTime,20)AssessTime,Assessor,UserID,convert(varchar(16),CreateTime,20)CreateTime,ColorNo from RMI_TASK inner join RMI_TASK_PROCESS " \
+    raw.sql = "select ProductNo, convert(varchar(16), ArriveTime,20)ArriveTime, convert(varchar(16),AssessTime,20)AssessTime, dbo.getUserNameByUserID(Assessor)Assessor, UserID, convert(varchar(16),CreateTime,20)CreateTime, ColorNo from RMI_TASK inner join RMI_TASK_PROCESS " \
               "on  RMI_TASK.SerialNo = RMI_TASK_PROCESS.Serialno where RMI_TASK.SerialNo = '%s' and RMI_TASK_PROCESS.ProcessID = 'F01'" % serialNo
     res, columns = raw.query_one(needColumnName=True)
-    formData['info'] = dict(zip(columns, res))
-    formData['info']['check'] = True
-    if getMethod == 'dataEntry':
-        formData['info']['check'] = False
+    formData['info'] = translateQueryResIntoDict(columns,(res,))[0]
+    # 判断是否待审批
+    # 结果有三种情况，1-填写和审核都未完成，0-填写完成，审核未完，NULL-填写和审核都完成
+    raw.sql = "select max(StepSeq) from RMI_TASK_PROCESS_STEP a inner join RMI_PROCESS_STEP b on a.StepID = b.StepID and a.ProcessID = b.ProcessID where SerialNo = '%s' and a.ProcessID = 'F01' and Finished = 0" % serialNo
+    res = raw.query_one()[0]
+    formData['info']['check'] = False
+    if res is None:
+        formData['info']['check'] = True
 
     # 构造formData['data']
     raw.sql = "select DingDanHao,HeGeShu,DaoLiaoZongShu,QiTa,GongYingShang,ShiCeShu,GuiGe,TouChanShu,DingDanShu,BiaoZhiShu,WaiGuan,JianYanHao,MaterialType as SelectedType from RMI_F01_DATA where SerialNo = '%s'" %serialNo
@@ -107,13 +110,11 @@ def getF01DataBySerialNo(serialNo, getMethod, userID):
     res,columns = raw.query_all(needColumnName=True)
     listData = translateQueryResIntoDict(columns,res)
     formData['data'] = listData[0].copy()
-    # 构造formData['data']['listData']
     formData['data']['listData'] = listData
-    # 构造formData['data']['step']
     formData['data']['step'] = getStepDataList(serialNo,'F01')
     return formData
 
-def updateStepAndModified(isFinsined, SerialNo, ProcessID, selectedStep, userID):
+def updateStepAndLastModified(isFinsined, SerialNo, ProcessID, selectedStep, userID):
     """
     更新表单step（填写、审核）的状态（1-完成，0-未完）,更新表格的最新修改人和修改时间
     :param isFinsined:step是否完成
@@ -123,14 +124,17 @@ def updateStepAndModified(isFinsined, SerialNo, ProcessID, selectedStep, userID)
     :return:sql语句
     """
     sql = "update RMI_TASK_PROCESS set LastModifiedTime = GETDATE(), LastModifiedUser = '%s' where Serialno = '%s' and ProcessID = '%s' " %(userID,SerialNo,ProcessID)
+    sql += "update RMI_TASK set LastModifiedTime = GETDATE() where SerialNo = '%s'" % SerialNo
     if isFinsined:
-        sql += "update RMI_TASK_PROCESS_STEP set Finished = 1, FinishTime = GETDATE() ,LastModifiedTime = GETDATE() where SerialNo = '%s' and ProcessID = '%s' and StepID = '%s'" %(SerialNo,ProcessID,selectedStep)
+        sql += "update RMI_TASK_PROCESS_STEP set Finished = 1, FinishTime = GETDATE() ,LastModifiedTime = GETDATE() where SerialNo = '%s' and ProcessID = '%s' and StepID = '%s' " %(SerialNo,ProcessID,selectedStep)
+    else:
+        sql += "update RMI_TASK_PROCESS_STEP set LastModifiedTime = GETDATE() where SerialNo = '%s' and ProcessID = '%s' and StepID = '%s' " %(SerialNo,ProcessID,selectedStep)
     return sql
 
 
 def insertF01DataBySerialNo(formData, userID, serialNo):
     """
-    根据任务流水号在F01表格中插入数据
+    根据任务流水号在F01表格中插入数据，即保存和提交表单
     :param formData:需新增的数据
     :param userID:工号
     :param serialNo:流水号
@@ -148,11 +152,28 @@ def insertF01DataBySerialNo(formData, userID, serialNo):
             values = values.replace("'None'",'NULL')
             raw.sql += "select '%s','%s','%s','%s','%s','%s',%s union all " % (serialNo,userID,formData['DaoLiaoZongShu'],formData['DingDanHao'],formData['SelectedType'],formData['GongYingShang'],values)
         raw.sql = raw.sql[:-10]
-    raw.sql += updateStepAndModified(formData['isSubmit'],serialNo,'F01',formData['selectedStep'],userID)
+    raw.sql += updateStepAndLastModified(formData['isSubmit'],serialNo,'F01',formData['selectedStep'],userID)
     raw.update()
     return
 
-
+def passProcessData(serialNo, processID ,userID):
+    """
+    表单通过审核
+    :param serialNo: 流水号
+    :param processID: 表单ID
+    :param userID: 工号
+    :return:
+    """
+    raw = Raw_sql()
+    stepList = getStepDataList(serialNo, processID)
+    global stepID
+    for ele in stepList:
+        if ele['state'] == 0:
+            stepID = ele['value']
+    raw.sql = "update RMI_TASK_PROCESS set AssessTime = GETDATE(), Assessor = '%s' where Serialno = '%s' and ProcessID = '%s' " %(userID,serialNo,processID)
+    raw.sql += updateStepAndLastModified(True, serialNo, processID, stepID, userID)
+    raw.update()
+    return
 
 # def deleteTaskBySerialNo(SerialNo):
 
