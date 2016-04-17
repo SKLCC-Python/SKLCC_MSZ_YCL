@@ -223,12 +223,6 @@ def insertF02DataBySerialNo(formData, userID, serialNo):
     raw = Raw_sql()
     raw.sql = "delete from RMI_F02_DATA where SerialNo = '%s' and InspectorNo = '%s' " %(serialNo,userID)
     if len(formData['listData']) > 0:
-        # outerKeys = ""
-        # outerValues = "'%s', '%s', " % (serialNo, userID)
-        # for key, value in formData.items():
-        #     if (key != 'listData') and (key != 'isSubmit') and (key != 'selectedStep'):
-        #         outerKeys += ','+str(key)
-        #         outerValues += ("'"+str(value)+"'")+','
 
         raw.sql += "insert into RMI_F02_DATA(SerialNo, InspectorNo ,JieLunBeiZhu,ShaXiang,ShouGan,CaiLiaoCiDianZhuYaoWenTi,ZhengFanMian,BiaoZhunSeKa,JieLun,hasBiaoZhunSeKa,ChanPinZhongLei,LeiBie,YinBiaoWeiZhi,DaoLiaoZongShu,CaiLiaoMingCheng,AnLunShiYan,YanZhenJieGuo,QiWei,GongYingShang,CaiLiaoFengYang,QiWeiBeiZhu,hasCaiLiaoFengYang, GuiGeOrKuanDu,DuiChenXingOrWanQuDu,GuiGeOrKuanDuDanWei,DuiChenXingOrWanQuDuDanWei, XiangMuFlag,ShuLiang, " \
                    "BeiZhu, CiDianJiFen, KaiDuBiaoZhunPianCha, CiDianJiDian, HouDuBiaoZhunZhi, KuanDuOrGuiGeBiaoZhunZhi, DuiChenXingOrWanQuDuBiaoZhunPianCha, HouDuShiCe, HuaXingShiCe, ShuLiangPiBiao1, HouDuBiaoZhunPianCha, KeZhongBiaoZhunPianCha, KuanDuOrGuiGeBiaoZhunPianCha, KaiDuBiaoZhunZhi, KaiDuShiCe, ShuLiangPiBiao2, KuanDuOrGuiGeShiCe1, " \
