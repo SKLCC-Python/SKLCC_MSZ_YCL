@@ -1350,6 +1350,8 @@ def getFormData(request, serialNo, processID, getMethod):
 	if request.method == 'GET':
 		if processID == 'F01':
 			return HttpResponse(json.dumps(getF01DataBySerialNo(serialNo, getMethod,request.session['UserId']), encoding='GB2312'), content_type='application/json')
+		if processID == 'F02':
+			return HttpResponse(json.dumps(getF02DataBySerialNo(serialNo, getMethod,request.session['UserId']), encoding='GB2312'), content_type='application/json')
 	else:
 		return HttpResponseBadRequest()
 
@@ -1364,6 +1366,8 @@ def insertFormData(request, serialNo, processID):
 	if request.method == 'POST':
 		if processID == 'F01':
 			insertF01DataBySerialNo(json.loads(request.POST['JSON']), request.session['UserId'],  serialNo)
+		if processID == 'F02':
+			insertF02DataBySerialNo(json.loads(request.POST['JSON']), request.session['UserId'],  serialNo)
 		return HttpResponse()
 	else:
 		return HttpResponseBadRequest()
